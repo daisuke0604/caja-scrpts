@@ -4,9 +4,16 @@
 #
 
 readonly TARGET=$1
+readonly EXT="${TARGET##*.}"
+
+if [ "${EXT}" != "zip" ] ; then
+  # except zip
+  unar -r -q "${TARGET}"
+  exit 0
+fi
 
 crypted=$(zipinfo -v "${TARGET}" | grep -c "not encrypted")
-if [ "$crypted" -gt "0" ] ; then
+if [ "${crypted}" -gt "0" ] ; then
   # not crypted
   unar -r -q "${TARGET}"
 else
